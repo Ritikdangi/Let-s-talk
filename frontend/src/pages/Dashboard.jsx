@@ -1,0 +1,13 @@
+import React from 'react'
+import Left from '../components/Left'
+
+function Dashboard() {
+  return (
+    <div>
+      <Left/>
+      
+    </div>
+  )
+}
+
+export default Dashboard
