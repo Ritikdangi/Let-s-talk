@@ -1,19 +1,23 @@
 import express from "express";
 import authRoutes from './Routes/authRoutes.js';
 import mongoose from "mongoose";
-import { Server } from "socket.io";
-import { createServer } from "http";
+// import { Server } from "socket.io";
+// import { createServer } from "http";
 import cors from "cors";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
-import Cookies from 'js-cookie';
+import cookieParser from 'cookie-parser';
 dotenv.config();
 const app = express();
 const port = 4000;
 const URL = process.env.MONGODB_URI;
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5173', // Your frontend URL
+  credentials: true, // Allow cookies
+  methods: ['GET', 'POST', 'PUT', 'DELETE'] // Allowed methods
+}));
 app.use(express.json());
-
+app.use(cookieParser());
 
 // const server = createServer(app);
 // const io = new Server(server , {

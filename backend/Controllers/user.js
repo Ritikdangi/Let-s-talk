@@ -1,7 +1,7 @@
 import User from '../Models/User.js'
 import jwt from 'jsonwebtoken'
 const Register = async(req,res) => {
-      const { name,email,password} = req.body;
+      const {name,email,password} = req.body;
       console.log("Trying to register:", name, email);
 
       let user = await User.findOne({email});
@@ -12,9 +12,11 @@ const Register = async(req,res) => {
        user = await User.create({ name,email,password});
        const userId = user._id;
     const token = jwt.sign({userId}, process.env.JWT_KEY);
-         res.cookie("token", token , {httpOnly: true,maxAge: 10 * 24 * 60 * 60 * 1000 }); 
-    return  res.json({token: token,
-                   user : user,
+          res.cookie("token", token , {httpOnly: true,maxAge: 10 * 24 * 60 * 60 * 1000  , domain: 'localhost', path: '/', sameSite: 'Lax',secure : false}); 
+     return  res.json({token: token,
+                   email : user.email,
+                   name: user.name,
+                   _id : user._id,
             message : "User registered successfully "
         });
        }
@@ -26,17 +28,18 @@ const Register = async(req,res) => {
       }
 }
 
-const Login = async (req,res)=>{
-    const { email,password} = req.body;
+const Login = async(req,res)=>{
+    const {email,password} = req.body;
+    console.log("trying to loggin for",email,password);
     const user = await User.findOne({email});
     if(!user){
         return res.json({
-            message: " User does not exist"
+            message: "User does not exist"
         });
     }
     try{
       const userId = user._id;
-      const token = jwt.sign({userId}, process.env.JWT_KEY);
+      const token =  jwt.sign({userId}, process.env.JWT_KEY);
       res.cookie("token", token , {httpOnly: true,maxAge: 10 * 24 * 60 * 60 * 1000 }); 
       return res.json({
           token : token,

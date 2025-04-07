@@ -4,7 +4,7 @@ import Left from '../components/Left'
 function Dashboard() {
   return (
     <div>
-      <Left/>
+     
       
     </div>
   )
