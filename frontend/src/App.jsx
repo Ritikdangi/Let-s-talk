@@ -2,42 +2,45 @@ import React ,{ useMemo } from 'react'
 import { io } from "socket.io-client";
 import { Button, Container, TextField } from '@mui/material';
 import { useState, useEffect } from 'react';
-import Left from './components/Left';
-import Right from './components/Right';
+import Left from './components/chatui/Left';
+import Right from './components/chatui/Right';
+import Signup from './components/auth/Signup';
+import Login from './components/auth/Login';
+
 function App() {
-  const socket = useMemo(() => io("http://localhost:4000"), []);
+  // const socket = useMemo(() => io("http://localhost:4000"), []);
 
-     const[message , setMessage]=useState("");
+  //    const[message , setMessage]=useState("");
 
-     useEffect(()=>{
-           socket.on("connect", ()=>{
-            console.log("user joined with id ",socket.id);
-           });
+  //    useEffect(()=>{
+  //          socket.on("connect", ()=>{
+  //           console.log("user joined with id ",socket.id);
+  //          });
 
-           socket.on("welcome",(s)=>{
-            console.log(s);
-           });
+  //          socket.on("welcome",(s)=>{
+  //           console.log(s);
+  //          });
           
 
-      return ()=>{     
-         socket.disconnect();
-      }
-     }, []);
+  //     return ()=>{     
+  //        socket.disconnect();
+  //     }
+  //    }, []);
    
-      // function msghandler(e){
-      //   e.preventDefault();
-      // console.log(e.target.value)
-      //   setMessage(
-      //    e.target.value
-      //   );
-      // }
+  //     // function msghandler(e){
+  //     //   e.preventDefault();
+  //     // console.log(e.target.value)
+  //     //   setMessage(
+  //     //    e.target.value
+  //     //   );
+  //     // }
      
-     function SubmitHandler(e){
-      e.preventDefault();
-      // console.log(message)
-    socket.emit("message", message);
-    setMessage("");
-     }
+  //    function SubmitHandler(e){
+  //     e.preventDefault();
+  //     // console.log(message)
+  //   socket.emit("message", message);
+  //   setMessage("");
+  //    }
 
   return (
       
@@ -49,12 +52,15 @@ function App() {
       //    <Button variant="outlined"  type="submit">Send</Button>
       // </form>  
       // </Container>
-<div className='flex h-screen w-screen flex-row'>
+/* <div className='flex h-screen w-screen flex-row'>
     <Left/>
     <Right />
-</div>
+</div> */
+    /*  <Signup/> */
+   <div className='w-sceeen'>
+    <Signup/>
+   </div>
 
-   
   )
 }
 
