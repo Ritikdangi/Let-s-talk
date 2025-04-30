@@ -12,12 +12,21 @@ const Register = async(req,res) => {
        user = await User.create({ name,email,password});
        const userId = user._id;
     const token = jwt.sign({userId}, process.env.JWT_KEY);
-          res.cookie("token", token , {httpOnly: true,maxAge: 10 * 24 * 60 * 60 * 1000  , domain: 'localhost', path: '/', sameSite: 'Lax',secure : false}); 
-     return  res.json({token: token,
-                   email : user.email,
-                   name: user.name,
-                   _id : user._id,
-            message : "User registered successfully "
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: false, // false for HTTP in development
+      sameSite: 'lax',
+      domain: 'localhost', // Explicit domain
+      path: '/',
+      maxAge: 10 * 24 * 60 * 60 * 1000
+    });
+     return  res.json({
+      user : {
+        email : user.email,
+        name: user.name,
+        _id : user._id,
+      },       
+        message : "User registered successfully "
         });
        }
       
@@ -37,13 +46,28 @@ const Login = async(req,res)=>{
             message: "User does not exist"
         });
     }
-    try{
+    try{ 
+       if(password!=user.password) {
+         return res.json({
+          message: "Wrong password is entered"
+         });
+       }
       const userId = user._id;
       const token =  jwt.sign({userId}, process.env.JWT_KEY);
-      res.cookie("token", token , {httpOnly: true,maxAge: 10 * 24 * 60 * 60 * 1000 }); 
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: false, // false for HTTP in development
+        sameSite: 'lax',
+        domain: 'localhost', // Explicit domain
+        path: '/',
+        maxAge: 10 * 24 * 60 * 60 * 1000
+      });
       return res.json({
-          token : token,
-          user : user,
+          user : {
+            email : user.email,
+            name : user.name,
+            _id : user._id
+          },
           message: " User login successfully"
           });
     }
@@ -59,7 +83,19 @@ const Login = async(req,res)=>{
 const Logout = async (req,res)=>{
         // const token = req.cookie("token");
        res.clearCookie("token");
+
        res.json({ message: "Token cookie removed!" });
 }
 
-export {Register,Login ,Logout};
+const AllUser = async(req, res )=>{
+          try{
+               console.log(req.user.userId);
+          const FilteredUsers = await User.find({ _id: { $ne: req.user.userId } }).select('-password' );
+              res.json(FilteredUsers);
+        } catch (error) {
+          console.error('Error fetching users:', error);
+          res.status(500).json({ message: 'Server error' })
+        }
+         
+}
+export {Register,Login , Logout , AllUser};

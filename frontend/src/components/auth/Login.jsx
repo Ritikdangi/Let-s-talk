@@ -4,6 +4,8 @@ import { FaRegUser } from "react-icons/fa";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { AiOutlineMail } from "react-icons/ai";
 import axios from 'axios';
+import { useAuth } from '../../context/AuthProvider';
+import { Link } from 'react-router';
 function Login() {
   const { 
     register, 
@@ -11,19 +13,29 @@ function Login() {
     formState: { errors } ,
     reset
   } = useForm();
-
+  
+    const [authUser, setAuthUser] = useAuth();
   const onSubmit = async (data) => {
     console.log("Login data:", data);
-    // Add your login API call here
+    //login API call here
       const userInfo= {
             email : data.email,
             password : data.password,
           };
           // api req to backend for user register 
-       await  axios.post("http://localhost:4000/api/auth/login", userInfo).then((response)=>{
+       await axios.post("http://localhost:4000/api/auth/login", userInfo, {
+        withCredentials: true // THIS IS CRUCIAL
+      }).then((response)=>{
             console.log(response);
-            if(response.data.user)
-            alert("User logged in successfully");
+            if(!response.data.user){
+              alert(response.data.message);
+            }
+            if(response.data.user){
+              alert("User logged in successfully");
+              setAuthUser(response.data.user);
+              localStorage.setItem("ChatApp",JSON.stringify(response.data));
+            }
+          
           }).catch((e)=>{
             console.log(e.message);
           });
@@ -97,12 +109,11 @@ function Login() {
           {/* Signup Redirect */}
           <span className='text-md font-semibold'> 
             Don't have an account? 
-            <button 
-              type="button" 
+            <Link  to="/register"
               className='text-blue-600 ml-2 cursor-pointer underline'
             >
               Sign Up
-            </button>
+            </Link>
           </span>
         </div>
       </div>

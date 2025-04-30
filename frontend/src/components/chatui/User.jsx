@@ -1,6 +1,6 @@
 import React from 'react'
 
-function User() {
+function User({ userData}) {
   return (
     <div className=' flex space-x-4 px-6 py-3 hover:bg-slate-600 duration-300 rounded-lg cursor-pointer' >
    <div >
@@ -14,7 +14,7 @@ function User() {
    
    <div  className='flex flex-col '>
       <div>
-        Ritk 
+        {userData?.name}
      </div>
       <div>
         typing.....
