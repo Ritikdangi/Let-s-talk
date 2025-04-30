@@ -1,12 +1,14 @@
 import React from 'react'
-import Left from '../components/Left'
-
+import Left from '../components/chatui/Left'
+import Right from '../components/chatui/Right'
 function Dashboard() {
-  return (
-    <div>
      
-      
-    </div>
+  return (
+
+     <div className='flex h-screen w-screen flex-row'>
+    <Left/>
+    <Right />
+</div> 
   )
 }
 

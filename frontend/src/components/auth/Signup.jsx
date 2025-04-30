@@ -5,6 +5,7 @@ import { AiOutlineMail } from "react-icons/ai";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { useAuth } from '../../context/AuthProvider';
 import axios from "axios" ;
+import { Link } from 'react-router';
 function Signup() {
 
   // context api state using here
@@ -26,12 +27,14 @@ function Signup() {
       // api req to backend for user register 
     await  axios.post("http://localhost:4000/api/auth/register", userInfo , { withCredentials: true }).then((response)=>{
         console.log(response);
-        if(response.data.email)
-        alert("User registered successfully");
-        
-        localStorage.setItem("ChatApp",JSON.stringify(response.data));
-        setAuthUser(response.data);
-        console.log(authUser);
+        if(response.data.user){
+          alert("User registered successfully");
+            // save user data into local storage 
+          localStorage.setItem("ChatApp",JSON.stringify(response.data));
+          // set user data into centralized auth  state 
+         setAuthUser(response.data.user);
+          console.log( "registered user data in auth user on reg ",authUser );
+        }
       }).catch((e)=>{
         console.log(e.message);
       });
@@ -136,12 +139,11 @@ function Signup() {
           {/* Login Redirect */}
           <span className='text-md font-semibold'> 
             Have an account? 
-            <button 
-              type="button" 
+            <Link to="/login"
               className='text-blue-600 ml-2 cursor-pointer underline'
             >
               Login
-            </button>
+            </Link>
           </span>
         </div>
       </div>
