@@ -53,7 +53,7 @@ export const GetMessage = async(req,res)=>{
       }).populate("messages");
         
       if(!conversation){
-         return res.status(404).json([]);
+         return res.status(200).json([]);
      }  
 
           const messages = await conversation.messages;

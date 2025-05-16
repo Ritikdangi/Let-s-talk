@@ -1,8 +1,13 @@
 import React from 'react'
-
+import useConversation from '../../zustand/useConversation';
 function User({ userData}) {
+  const { selectedConversation , setSelectedConversation } = useConversation();
+ const isSelected = (selectedConversation?._id === userData?._id);
   return (
-    <div className=' flex space-x-4 px-6 py-3 hover:bg-slate-600 duration-300 rounded-lg cursor-pointer' >
+    <div className={` ${isSelected ? 'bg-slate-700' : ''} `} onClick={() => {
+      setSelectedConversation(userData); console.log("selectedCONVERSATION in user component " ,selectedConversation) 
+      }}>
+       <div className={' flex space-x-4 px-6 py-3 hover:bg-slate-600 duration-300 rounded-lg cursor-pointer' } >
    <div >
    <div className="avatar " >
   <div className="w-10 rounded-full">
@@ -17,11 +22,13 @@ function User({ userData}) {
         {userData?.name}
      </div>
       <div>
-        typing.....
+        {userData?.email}
       </div>
    </div>
      
     </div>
+    </div>
+   
   )
 }
 
