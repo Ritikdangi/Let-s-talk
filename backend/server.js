@@ -3,14 +3,13 @@ import authRoutes from './Routes/authRoutes.js';
 import userRoutes from './Routes/userRoutes.js';
 import messageRoutes from './Routes/messageRoutes.js'
 import mongoose from "mongoose";
-// import { Server } from "socket.io";
-// import { createServer } from "http";
+import {app , server} from './SocketIO/server.js'
+
 import cors from "cors";
 import dotenv from "dotenv";
-import jwt from "jsonwebtoken";
 import cookieParser from 'cookie-parser';
 dotenv.config();
-const app = express();
+// const app = express();
 const port = 4000;
 const URL = process.env.MONGODB_URI;
 app.use(cors({
@@ -44,21 +43,6 @@ mongoose.connect(URL).then(
    console.log("database is connected")
   ).catch((err)=>console.log("error in databse connection", err));
 
-// socket io connection
-
-// io.on("connection", (socket)=>{
-//      console.log("user connected ", socket.id);
-//     io.emit("welcome","welcome to chat");
-
-//      socket.on("message",(m)=>{
-//         console.log(m, socket.id);
-//      })
-//     socket.on('disconnect', ()=>{
-//         console.log("user  desconnected  ", socket.id);
-//       })
-// });
-
-
 app.get("/api",(req,res)=>{
     res.send("hello");
 });
@@ -70,7 +54,6 @@ app.use("/api/chat" , userRoutes);
 
 app.use("/api/message" ,messageRoutes);
 
-app.listen(port, ()=>{
+server.listen(port, ()=>{
  console.log(`server is running on port ${port}`);
 });
-

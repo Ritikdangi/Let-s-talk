@@ -1,12 +1,8 @@
-import React from 'react'
-import User from './User'
-import { IoMdSend } from "react-icons/io";
+
 import Messages from './Messages';
 import Showuser from './Showuser';
-import useSendMessage from '../../context/useSendMessage';
 import Typesend from './Typesend';
 function Right() {
-
 
   return (
     <div className= 'bg-slate-900 text-white w-[70%] '>

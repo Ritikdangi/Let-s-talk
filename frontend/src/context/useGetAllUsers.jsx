@@ -1,49 +1,39 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import Cookies from 'js-cookie';
-// import { useAuth } from './AuthProvider';
+import { useAuth } from './useAuth.jsx';
+
 export function useGetAllUsers() {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    // const [authUser, setAuthUser] = useAuth();
+    const [authUser , setAuthUser,] = useAuth();
+
     useEffect(() => {
         const fetchUsers = async () => {
+            // if (!authUser?.user?._id) {
+            //     setLoading(false);
+            //     return;
+            // }
+
             try {
                 setLoading(true);
-                // const token = Cookies.get('token');
-                // console.log("Token sources:", {
-                //     cookieToken: Cookies.get('token'),
-                //   });
-                // if (!authUser) {
-                //     setIsAuthenticated(false);
-                //     setLoading(false);  
-                //     return;
-                // }
-
                 const response = await axios.get('http://localhost:4000/api/chat/users', {
-                    withCredentials: true // Cookies only
-                  });
+                    withCredentials: true
+                });
 
                 setUsers(response.data);
-                setIsAuthenticated(true);
+                setError(null);
             } catch (err) {
+                console.error('Error fetching users:', err);
                 setError(err.response?.data?.message || 'Failed to fetch users');
-                setIsAuthenticated(false);
+                setUsers([]);
             } finally {
                 setLoading(false);
             }
         };
 
         fetchUsers();
-    }, []);
+    }, [authUser?.user?._id]);
 
-    return [
-        users,
-        setUsers,
-        loading,
-        error,
-        isAuthenticated      
-    ];
+    return [users, setUsers, loading, error];
 }
