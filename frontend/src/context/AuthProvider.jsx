@@ -1,9 +1,9 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
+import { AuthContext } from './Createcontext.jsx';
 
-const AuthContext = createContext();
 
-function AuthProvider({ children }) {
+function AuthProvider  ({ children }) {
   const [authUser, setAuthUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -11,8 +11,9 @@ function AuthProvider({ children }) {
     const checkAuth = () => {
       try {
         const token = Cookies.get("token") || localStorage.getItem("ChatApp");
-        console.log( " in auth provider" ,token)
+        console.log( "in auth provider" ,token)
         setAuthUser(token ? JSON.parse(token) : null);
+        setLoading(false);
       } catch (error) {
         console.error("Auth error:", error);
         setAuthUser(null);
@@ -22,6 +23,8 @@ function AuthProvider({ children }) {
     };
 
     checkAuth();
+    window.addEventListener("storage", checkAuth);
+    return () => window.removeEventListener("storage", checkAuth);
   }, []);
 
   return (
@@ -33,10 +36,3 @@ function AuthProvider({ children }) {
 
 export default AuthProvider;
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within AuthProvider');
-  }
-  return context;
-};

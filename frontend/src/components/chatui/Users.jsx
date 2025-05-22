@@ -3,7 +3,7 @@ import User from './User'
 import { useGetAllUsers } from '../../context/useGetAllUsers';
 
 function Users() {
-  const [users , setUsers] = useGetAllUsers();
+  const [users , setUsers , , ] = useGetAllUsers();
    console.log("users in users components  " , users);
    if (users === undefined || users === null) {
     return <div className='px-5 py-2  flex justify-center items-center h-[calc(88vh-10vh)] text-white font-semibold'>Loading...</div>

@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { FaRegUser } from "react-icons/fa";
 import { AiOutlineMail } from "react-icons/ai";
 import { RiLockPasswordLine } from "react-icons/ri";
-import { useAuth } from '../../context/AuthProvider';
+import { useAuth } from '../../context/useAuth.jsx';
 import axios from "axios" ;
 import { Link } from 'react-router';
 function Signup() {

@@ -4,7 +4,7 @@ import { FaRegUser } from "react-icons/fa";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { AiOutlineMail } from "react-icons/ai";
 import axios from 'axios';
-import { useAuth } from '../../context/AuthProvider';
+import { useAuth } from '../../context/useAuth.jsx';
 import { Link } from 'react-router';
 function Login() {
   const { 
@@ -32,8 +32,9 @@ function Login() {
             }
             if(response.data.user){
               alert("User logged in successfully");
-              setAuthUser(response.data.user);
-              localStorage.setItem("ChatApp",JSON.stringify(response.data));
+              localStorage.setItem("ChatApp", JSON.stringify(response.data));
+              setAuthUser(response.data);
+              window.dispatchEvent(new Event("storage"));
             }
           
           }).catch((e)=>{

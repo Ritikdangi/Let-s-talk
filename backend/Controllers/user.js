@@ -2,7 +2,7 @@ import User from '../Models/User.js'
 import jwt from 'jsonwebtoken'
 const Register = async(req,res) => {
       const {name,email,password} = req.body;
-      console.log("Trying to register:", name, email);
+      // console.log("Trying to register:", name, email);
 
       let user = await User.findOne({email});
       if(user){
@@ -39,7 +39,7 @@ const Register = async(req,res) => {
 
 const Login = async(req,res)=>{
     const {email,password} = req.body;
-    console.log("trying to loggin for",email,password);
+    // console.log("trying to loggin for",email,password);
     const user = await User.findOne({email});
     if(!user){
         return res.json({
@@ -89,7 +89,7 @@ const Logout = async (req,res)=>{
 
 const AllUser = async(req, res )=>{
           try{
-               console.log(req.user.userId);
+              //  console.log(req.user.userId);
           const FilteredUsers = await User.find({ _id: { $ne: req.user.userId } }).select('-password' );
               res.json(FilteredUsers);
         } catch (error) {
