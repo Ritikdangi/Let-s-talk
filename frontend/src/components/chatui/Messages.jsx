@@ -3,10 +3,12 @@ import useGetMessage from '../../context/useGetMessage.jsx'
 import Loading from './Loading.jsx';
 import Message from './Message.jsx';
 import useConversation from '../../zustand/useConversation';
+import useGetSocketMessage from '../../context/useGetSocketMessage.jsx';
 function Messages() {
    const { loading , messages} = useGetMessage();
     const { selectedConversation } = useConversation();
-
+               useGetSocketMessage();
+    // useGetSocketMessage is used to listen for new messages from the socket
     const lastMsgRef = useRef();
     useEffect(()=>{
 
