@@ -38,6 +38,21 @@ io.on('connection', (socket) => {
     io.emit('getOnlineUsers', Object.keys(users));
   });
 
+  // Handle typing events
+  socket.on('typing', ({ receiverId }) => {
+    const receiverSocketId = getReceiverId(receiverId);
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit('userTyping', { userId });
+    }
+  });
+
+  socket.on('stopTyping', ({ receiverId }) => {
+    const receiverSocketId = getReceiverId(receiverId);
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit('userStoppedTyping', { userId });
+    }
+  });
+
   // Handle disconnection
   socket.on('disconnect', () => {
     console.log('🔌 User disconnected:', socket.id);
