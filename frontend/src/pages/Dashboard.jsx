@@ -1,14 +1,43 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Left from '../components/chatui/Left'
 import Right from '../components/chatui/Right'
+import { IoMenu } from "react-icons/io5";
+
 function Dashboard() {
+  const [showSidebar, setShowSidebar] = useState(false);
      
   return (
+    <div className='flex h-screen w-screen'>
+      {/* Mobile Menu Button */}
+      <button 
+        className='md:hidden fixed top-4 left-4 z-50 p-2 bg-slate-700 rounded-lg text-white'
+        onClick={() => setShowSidebar(!showSidebar)}
+      >
+        <IoMenu size={24} />
+      </button>
 
-     <div className='flex h-screen w-screen flex-row'>
-    <Left/>
-    <Right />
-</div> 
+      {/* Sidebar - Hidden on mobile by default, shown when menu is clicked */}
+      <div className={`
+        fixed md:static w-[280px] md:w-[30%] h-full z-40
+        transform transition-transform duration-300 ease-in-out
+        ${showSidebar ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+      `}>
+        <Left />
+      </div>
+
+      {/* Main Chat Area */}
+      <div className='w-full md:w-[70%] h-full'>
+        <Right />
+      </div>
+
+      {/* Overlay for mobile - closes sidebar when clicked */}
+      {showSidebar && (
+        <div 
+          className='fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden'
+          onClick={() => setShowSidebar(false)}
+        />
+      )}
+    </div>
   )
 }
 
