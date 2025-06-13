@@ -10,7 +10,7 @@ function Dashboard() {
     <div className='flex h-screen w-screen'>
       {/* Mobile Menu Button */}
       <button 
-        className='md:hidden fixed top-4 left-4 z-50 p-2 bg-slate-700 rounded-lg text-white'
+        className='md:hidden fixed top-4 right-4 z-50 p-2 bg-slate-700 rounded-lg text-white hover:bg-slate-600 transition-colors'
         onClick={() => setShowSidebar(!showSidebar)}
       >
         <IoMenu size={24} />
