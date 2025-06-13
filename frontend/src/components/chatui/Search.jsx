@@ -1,19 +1,22 @@
 import React from 'react'
 import { FaSearch } from "react-icons/fa";
-function Search() {
 
+function Search() {
   return (
-    <div className='text-white px-6 py-4 h-[10vh]'>
-        <form action="">
-        <div className='flex'>
-      <input type="text" placeholder="Search ..." className="border-[1px] items-center rounded-lg input gap-2 mr-4 w-[80%] mt-1  " />
-        <button className=' text-3xl ml-2 px-2 hover:bg-gray-600 rounded-md' >
-        <FaSearch />
-        </button>
-      </div>
-   
-        </form>
+    <div className='text-white px-3 md:px-6 py-3 md:py-4 min-h-[10vh]'>
+      <form action="">
+        <div className='flex items-center gap-2'>
+          <input 
+            type="text" 
+            placeholder="Search ..." 
+            className="input border-[1px] rounded-lg w-full text-sm md:text-base" 
+          />
+          <button className='text-xl md:text-3xl p-2 hover:bg-gray-600 rounded-md transition-colors'>
+            <FaSearch />
+          </button>
         </div>
+      </form>
+    </div>
   )
 }
 

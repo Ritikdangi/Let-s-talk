@@ -1,23 +1,23 @@
-
 import Messages from './Messages';
 import Showuser from './Showuser';
 import Typesend from './Typesend';
 function Right() {
-
   return (
-    <div className= 'bg-slate-900 text-white w-[70%] '>
-      {/* part 1 */}
-     <div className="bg-slate-600  h-[8vh]">
-         <Showuser/>
-     </div>
- {/* part 2 */}
-     <div className="h-[calc(94vh-10vh)] text-white font-semibold overflow-y-auto mx-6 mt-2">
-   <Messages/>
-     </div>
- {/* part 3 */}
-       <div className="">
+    <div className='bg-slate-900 text-white w-full md:w-[70%] flex flex-col h-screen'>
+      {/* Header */}
+      <div className="bg-slate-600 min-h-[8vh]">
+        <Showuser/>
+      </div>
+      
+      {/* Messages Area */}
+      <div className="flex-1 overflow-y-auto mx-2 md:mx-6 mt-2">
+        <Messages/>
+      </div>
+      
+      {/* Input Area */}
+      <div className="min-h-[6vh]">
         <Typesend/>
-       </div>
+      </div>
     </div>
   )
 }
