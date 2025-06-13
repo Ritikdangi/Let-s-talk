@@ -3,7 +3,7 @@ import Showuser from './Showuser';
 import Typesend from './Typesend';
 function Right() {
   return (
-    <div className='bg-slate-900 text-white w-full md:w-[70%] flex flex-col h-screen'>
+    <div className='bg-slate-900 text-white w-full h-full flex flex-col'>
       {/* Header */}
       <div className="bg-slate-600 min-h-[8vh]">
         <Showuser/>

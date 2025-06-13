@@ -5,7 +5,7 @@ import Logout from './Logout'
 
 function Left() {
   return (
-    <div className='flex flex-col w-full md:w-[30%] text-gray-300 bg-[#0c0a0a] h-screen'>
+    <div className='flex flex-col w-full h-full text-gray-300 bg-[#0c0a0a]'>
       <Search/>
       <div className="flex-1 overflow-y-auto">
         <Users/>
