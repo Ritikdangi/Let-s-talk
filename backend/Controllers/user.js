@@ -14,9 +14,8 @@ const Register = async(req,res) => {
     const token = jwt.sign({userId}, process.env.JWT_KEY);
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false, // false for HTTP in development
-      sameSite: 'lax',
-      domain: 'localhost', // Explicit domain
+      secure: true, // true for HTTPS in production
+      sameSite: 'none', // 'none' for cross-site cookies
       path: '/',
       maxAge: 10 * 24 * 60 * 60 * 1000
     });
@@ -56,9 +55,8 @@ const Login = async(req,res)=>{
       const token =  jwt.sign({userId}, process.env.JWT_KEY);
       res.cookie("token", token, {
         httpOnly: true,
-        secure: false, // false for HTTP in development
-        sameSite: 'lax',
-        domain: 'localhost', // Explicit domain
+        secure: true, // true for HTTPS in production
+        sameSite: 'none', // 'none' for cross-site cookies
         path: '/',
         maxAge: 10 * 24 * 60 * 60 * 1000
       });
