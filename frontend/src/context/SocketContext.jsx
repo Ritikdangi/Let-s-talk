@@ -8,6 +8,7 @@ export const SocketProvider = ({ children }) => {
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [authUser,,] = useAuth();
   const socketRef = useRef(null);
+  const SOCKET_URL = import.meta.env.VITE_SOCKET_URL;
 
   useEffect(() => {
     const userId = authUser?.user?._id;
@@ -32,7 +33,7 @@ export const SocketProvider = ({ children }) => {
       cleanup();
 
       // Create new socket connection
-      const newSocket = io("http://localhost:4000", {
+      const newSocket = io(SOCKET_URL, {
         withCredentials: true,
         query: { userId },
         autoConnect: true,

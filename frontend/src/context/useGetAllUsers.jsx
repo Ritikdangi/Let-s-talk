@@ -7,6 +7,7 @@ export function useGetAllUsers() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [authUser , setAuthUser,] = useAuth();
+    const API_URL = import.meta.env.VITE_API_URL;
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -17,7 +18,7 @@ export function useGetAllUsers() {
 
             try {
                 setLoading(true);
-                const response = await axios.get('http://localhost:4000/api/chat/users', {
+                const response = await axios.get(`${API_URL}/api/chat/users`, {
                     withCredentials: true
                 });
 

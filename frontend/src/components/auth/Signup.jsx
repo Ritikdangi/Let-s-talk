@@ -6,6 +6,7 @@ import { RiLockPasswordLine } from "react-icons/ri";
 import { useAuth } from '../../context/useAuth.jsx';
 import axios from "axios" ;
 import { Link } from 'react-router';
+
 function Signup() {
 
   // context api state using here
@@ -16,6 +17,8 @@ function Signup() {
     formState: { errors } 
   } = useForm();
   
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const onSubmit = async(data) => {
     console.log("Form submitted:", data);
     // Add your signup logic here (e.g., API call)
@@ -25,7 +28,7 @@ function Signup() {
         password : data.password
       };
       // api req to backend for user register 
-    await  axios.post("http://localhost:4000/api/auth/register", userInfo , { withCredentials: true }).then((response)=>{
+    await  axios.post(`${API_URL}/api/auth/register`, userInfo , { withCredentials: true }).then((response)=>{
         console.log(response);
         if(response.data.user){
           alert("User registered successfully");

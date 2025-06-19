@@ -1,9 +1,11 @@
 import React, { useEffect  , useState} from 'react'
 import useConversation from '../zustand/useConversation';
 import axios from 'axios';
+
 function useGetMessage() {
     const [loading, setLoading] = useState(false);
     const {messages, setMessage , selectedConversation} = useConversation();
+    const API_URL = import.meta.env.VITE_API_URL;
      
      useEffect(()=>{
         setLoading(true);
@@ -12,7 +14,7 @@ function useGetMessage() {
         if(selectedConversation && selectedConversation._id){
             try{
                 console.log("Fetching messages for:", selectedConversation);
-         const res  =  await   axios.get(`http://localhost:4000/api/message/get/${selectedConversation._id}` , {
+         const res  =  await   axios.get(`${API_URL}/api/message/get/${selectedConversation._id}` , {
             withCredentials: true}
          );
               setMessage(res.data);

@@ -6,6 +6,7 @@ import { AiOutlineMail } from "react-icons/ai";
 import axios from 'axios';
 import { useAuth } from '../../context/useAuth.jsx';
 import { Link } from 'react-router';
+
 function Login() {
   const { 
     register, 
@@ -15,6 +16,7 @@ function Login() {
   } = useForm();
   
     const [authUser, setAuthUser] = useAuth();
+  const API_URL = import.meta.env.VITE_API_URL;
   const onSubmit = async (data) => {
     console.log("Login data:", data);
     //login API call here
@@ -23,7 +25,7 @@ function Login() {
             password : data.password,
           };
           // api req to backend for user register 
-       await axios.post("http://localhost:4000/api/auth/login", userInfo, {
+       await axios.post(`${API_URL}/api/auth/login`, userInfo, {
         withCredentials: true // THIS IS CRUCIAL
       }).then((response)=>{
             console.log(response);
