@@ -20,12 +20,6 @@ function Search() {
             onChange={(e) => setSearchQuery(e.target.value)}
             className="input border-[1px] rounded-lg w-full text-sm md:text-base" 
           />
-          <button 
-            type="submit"
-            className='text-xl md:text-3xl p-2 hover:bg-gray-600 rounded-md transition-colors'
-          >
-            <FaSearch />
-          </button>
         </div>
       </form>
     </div>
