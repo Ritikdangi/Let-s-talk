@@ -13,7 +13,7 @@ dotenv.config();
 const port = 4000;
 const URL = process.env.MONGODB_URI;
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: process.env.CLIENT_URL,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
