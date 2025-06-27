@@ -66,12 +66,12 @@ function Login() {
         <div className="flex flex-col gap-4">
           {/* Email - Same validation as Signup */}
           <div className="space-y-2">
-            <label className="flex gap-3 items-center">
-              <AiOutlineMail className="w-6 h-6 text-gray-400 flex-shrink-0" />
+            <div className="relative">
+              <AiOutlineMail className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input 
                 type="email" 
                 placeholder="mail@site.com" 
-                className="w-full p-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 border border-gray-600 focus:border-green-500 focus:outline-none transition-colors"
+                className="w-full p-3 pl-10 rounded-lg bg-gray-700 text-white placeholder-gray-400 border border-gray-600 focus:border-green-500 focus:outline-none transition-colors"
                 {...register("email", { 
                   required: "Email is required",
                   pattern: {
@@ -80,20 +80,20 @@ function Login() {
                   }
                 })}
               />
-            </label>
+            </div>
             {errors.email && (
-              <p className="text-red-500 text-sm ml-8">{errors.email.message}</p>
+              <p className="text-red-500 text-sm ml-2">{errors.email.message}</p>
             )}
           </div>
 
           {/* Password - Same validation as Signup */}
           <div className="space-y-2">
-            <label className="flex gap-3 items-center">
-              <RiLockPasswordLine className="w-6 h-6 text-gray-400 flex-shrink-0" />
+            <div className="relative">
+              <RiLockPasswordLine className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input 
                 type="password" 
                 placeholder="Password" 
-                className="w-full p-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 border border-gray-600 focus:border-green-500 focus:outline-none transition-colors"
+                className="w-full p-3 pl-10 rounded-lg bg-gray-700 text-white placeholder-gray-400 border border-gray-600 focus:border-green-500 focus:outline-none transition-colors"
                 {...register("password", { 
                   required: "Password is required",
                   minLength: {
@@ -106,9 +106,9 @@ function Login() {
                   }
                 })}
               />
-            </label>
+            </div>
             {errors.password && (
-              <p className="text-red-500 text-sm ml-8">{errors.password.message}</p>
+              <p className="text-red-500 text-sm ml-2">{errors.password.message}</p>
             )}
           </div>
 

@@ -62,47 +62,47 @@ function Signup() {
         <div className="flex flex-col gap-4">
           {/* Username */}
           <div className="space-y-2">
-            <label className="flex gap-3 items-center">
-              <FaRegUser className="w-6 h-6 text-gray-400 flex-shrink-0"/>
+            <div className="relative">
+              <FaRegUser className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input 
                 type="text" 
-               placeholder="Full Name" 
-               className="w-full p-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 border border-gray-600 focus:border-green-500 focus:outline-none transition-colors"
-              {...register("fullname", { 
-              required: "Full name is required",
-               pattern: {
-              value: /^[A-Za-z]+(?: [A-Za-z]+)*$/,
-              message: "Only letters and spaces between names"
-             },
-             minLength: {
-             value: 3,
-             message: "Minimum 3 characters"
-             },
-             maxLength: {
-            value: 50,
-            message: "Maximum 50 characters"
-           },
-          validate: (value) => {
-            const nameCount = value.trim().split(/\s+/).length;
-            if (nameCount < 2) return "Please enter both first and last name";
-            return true;
-            }
-            })}
-             />
-            </label>
+                placeholder="Full Name" 
+                className="w-full p-3 pl-10 rounded-lg bg-gray-700 text-white placeholder-gray-400 border border-gray-600 focus:border-green-500 focus:outline-none transition-colors"
+                {...register("fullname", { 
+                  required: "Full name is required",
+                  pattern: {
+                    value: /^[A-Za-z]+(?: [A-Za-z]+)*$/,
+                    message: "Only letters and spaces between names"
+                  },
+                  minLength: {
+                    value: 3,
+                    message: "Minimum 3 characters"
+                  },
+                  maxLength: {
+                    value: 50,
+                    message: "Maximum 50 characters"
+                  },
+                  validate: (value) => {
+                    const nameCount = value.trim().split(/\s+/).length;
+                    if (nameCount < 2) return "Please enter both first and last name";
+                    return true;
+                  }
+                })}
+              />
+            </div>
             {errors.fullname && (
-              <p className="text-red-500 text-sm ml-8">{errors.fullname.message}</p>
+              <p className="text-red-500 text-sm ml-2">{errors.fullname.message}</p>
             )}
           </div>
 
           {/* Email */}
           <div className="space-y-2">
-            <label className="flex gap-3 items-center">
-              <AiOutlineMail className="w-6 h-6 text-gray-400 flex-shrink-0" />
+            <div className="relative">
+              <AiOutlineMail className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input 
                 type="email" 
                 placeholder="mail@site.com" 
-                className="w-full p-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 border border-gray-600 focus:border-green-500 focus:outline-none transition-colors"
+                className="w-full p-3 pl-10 rounded-lg bg-gray-700 text-white placeholder-gray-400 border border-gray-600 focus:border-green-500 focus:outline-none transition-colors"
                 {...register("email", { 
                   required: "Email is required",
                   pattern: {
@@ -111,20 +111,20 @@ function Signup() {
                   }
                 })}
               />
-            </label>
+            </div>
             {errors.email && (
-              <p className="text-red-500 text-sm ml-8">{errors.email.message}</p>
+              <p className="text-red-500 text-sm ml-2">{errors.email.message}</p>
             )}
           </div>
 
           {/* Password */}
           <div className="space-y-2">
-            <label className="flex gap-3 items-center">
-              <RiLockPasswordLine className="w-6 h-6 text-gray-400 flex-shrink-0" />
+            <div className="relative">
+              <RiLockPasswordLine className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input 
                 type="password" 
                 placeholder="Password" 
-                className="w-full p-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 border border-gray-600 focus:border-green-500 focus:outline-none transition-colors"
+                className="w-full p-3 pl-10 rounded-lg bg-gray-700 text-white placeholder-gray-400 border border-gray-600 focus:border-green-500 focus:outline-none transition-colors"
                 {...register("password", { 
                   required: "Password is required",
                   minLength: {
@@ -137,9 +137,9 @@ function Signup() {
                   }
                 })}
               />
-            </label>
+            </div>
             {errors.password && (
-              <p className="text-red-500 text-sm ml-8">{errors.password.message}</p>
+              <p className="text-red-500 text-sm ml-2">{errors.password.message}</p>
             )}
           </div>
 
