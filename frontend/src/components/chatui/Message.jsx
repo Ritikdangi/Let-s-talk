@@ -16,20 +16,17 @@ const Message = React.forwardRef(({ message }, ref) => {
     <div ref={ref} className="px-2 md:px-4 py-1">
       <div className={`chat ${chatName}`}>
         <div>
-          <div className={`chat-bubble rounded-3xl text-white ${chatColor} break-words text-sm md:text-base max-w-[80%] md:max-w-[100%]`}>
-            {message.message}
-          </div>
           <div
-            className="text-[11px] text-gray-400 mt-1"
-            style={{
-              textAlign: itsMe ? 'right' : 'left',
-              marginLeft: itsMe ? 'auto' : '16px',
-              marginRight: itsMe ? '16px' : 'auto',
-              width: 'fit-content',
-              minWidth: 40,
-            }}
+            className={`chat-bubble rounded-3xl text-white ${chatColor} break-words text-sm md:text-base max-w-[80%] md:max-w-[100%] p-3 flex flex-row items-end flex-wrap`}
+            style={{ wordBreak: 'break-word', whiteSpace: 'pre-line' }}
           >
-            {time}
+            <span className="break-words" style={{overflowWrap: 'anywhere'}}>{message.message}</span>
+            <span
+              className={`text-[11px] text-gray-300 ml-2 ${itsMe ? 'self-end' : 'self-end'}`}
+              style={{ opacity: 0.7, whiteSpace: 'nowrap' }}
+            >
+              {time}
+            </span>
           </div>
         </div>
       </div>

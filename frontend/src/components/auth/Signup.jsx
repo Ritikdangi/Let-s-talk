@@ -6,6 +6,7 @@ import { RiLockPasswordLine } from "react-icons/ri";
 import { useAuth } from '../../context/useAuth.jsx';
 import axios from "axios" ;
 import { Link } from 'react-router';
+import Logo from './Logo.jsx';
 
 function Signup() {
 
@@ -44,113 +45,126 @@ function Signup() {
   };
 
   return (
-    <form 
-      onSubmit={handleSubmit(onSubmit)} 
-      className="w-screen h-screen flex flex-col items-center justify-center"
-    >
-      <div className="w-[50vh] h-[40vh] bg-slate-800 rounded-3xl p-6">
+    <div className="min-h-screen w-full flex items-center justify-center bg-gray-900 p-4">
+      <form 
+        onSubmit={handleSubmit(onSubmit)} 
+        className="w-full max-w-md bg-slate-800 rounded-3xl p-6 md:p-8 shadow-2xl"
+      >
+        {/* Let's Talk Logo */}
+        <div className="mb-6">
+          <Logo size="default" />
+        </div>
+
         {/* Sign Up Heading */}
-        <div className="text-3xl text-green-600 text-center mb-6">Sign up</div>
+        <div className="text-xl md:text-2xl text-gray-300 text-center mb-6 font-semibold">Join the Conversation!</div>
 
         {/* Form Inputs */}
         <div className="flex flex-col gap-4">
           {/* Username */}
-          <label className="flex gap-3 items-center">
-            <FaRegUser className="text-2xl"/>
-            <input 
-              type="text" 
-             placeholder="Full Name" 
-             className="w-full p-3 rounded-lg bg-gray-700 text-white placeholder-gray-400"
-            {...register("fullname", { 
-            required: "Full name is required",
-             pattern: {
-            value: /^[A-Za-z]+(?: [A-Za-z]+)*$/,
-            message: "Only letters and spaces between names"
+          <div className="space-y-2">
+            <label className="flex gap-3 items-center">
+              <FaRegUser className="w-6 h-6 text-gray-400 flex-shrink-0"/>
+              <input 
+                type="text" 
+               placeholder="Full Name" 
+               className="w-full p-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 border border-gray-600 focus:border-green-500 focus:outline-none transition-colors"
+              {...register("fullname", { 
+              required: "Full name is required",
+               pattern: {
+              value: /^[A-Za-z]+(?: [A-Za-z]+)*$/,
+              message: "Only letters and spaces between names"
+             },
+             minLength: {
+             value: 3,
+             message: "Minimum 3 characters"
+             },
+             maxLength: {
+            value: 50,
+            message: "Maximum 50 characters"
            },
-           minLength: {
-           value: 3,
-           message: "Minimum 3 characters"
-           },
-           maxLength: {
-          value: 50,
-          message: "Maximum 50 characters"
-         },
-        validate: (value) => {
-          const nameCount = value.trim().split(/\s+/).length;
-          if (nameCount < 2) return "Please enter both first and last name";
-          return true;
-          }
-          })}
-           />
-          </label>
-          {errors.fullname && (
-            <p className="text-red-500 text-sm -mt-2">{errors.fullname.message}</p>
-          )}
+          validate: (value) => {
+            const nameCount = value.trim().split(/\s+/).length;
+            if (nameCount < 2) return "Please enter both first and last name";
+            return true;
+            }
+            })}
+             />
+            </label>
+            {errors.fullname && (
+              <p className="text-red-500 text-sm ml-8">{errors.fullname.message}</p>
+            )}
+          </div>
 
           {/* Email */}
-          <label className="flex gap-3 items-center">
-            <AiOutlineMail className="text-2xl" />
-            <input 
-              type="email" 
-              placeholder="mail@site.com" 
-              className="w-full p-3 rounded-lg bg-gray-700 text-white placeholder-gray-400"
-              {...register("email", { 
-                required: "Email is required",
-                pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: "Invalid email address"
-                }
-              })}
-            />
-          </label>
-          {errors.email && (
-            <p className="text-red-500 text-sm -mt-2">{errors.email.message}</p>
-          )}
+          <div className="space-y-2">
+            <label className="flex gap-3 items-center">
+              <AiOutlineMail className="w-6 h-6 text-gray-400 flex-shrink-0" />
+              <input 
+                type="email" 
+                placeholder="mail@site.com" 
+                className="w-full p-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 border border-gray-600 focus:border-green-500 focus:outline-none transition-colors"
+                {...register("email", { 
+                  required: "Email is required",
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    message: "Invalid email address"
+                  }
+                })}
+              />
+            </label>
+            {errors.email && (
+              <p className="text-red-500 text-sm ml-8">{errors.email.message}</p>
+            )}
+          </div>
 
           {/* Password */}
-          <label className="flex gap-3 items-center">
-            <RiLockPasswordLine className="text-2xl" />
-            <input 
-              type="password" 
-              placeholder="Password" 
-              className="w-full p-3 rounded-lg bg-gray-700 text-white placeholder-gray-400"
-              {...register("password", { 
-                required: "Password is required",
-                minLength: {
-                  value: 6,
-                  message: "Minimum 6 characters"
-                },
-                pattern: {
-                  value: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}$/,
-                  message: "Must include number, lowercase, and uppercase letters"
-                }
-              })}
-            />
-          </label>
-          {errors.password && (
-            <p className="text-red-500 text-sm -mt-2">{errors.password.message}</p>
-          )}
+          <div className="space-y-2">
+            <label className="flex gap-3 items-center">
+              <RiLockPasswordLine className="w-6 h-6 text-gray-400 flex-shrink-0" />
+              <input 
+                type="password" 
+                placeholder="Password" 
+                className="w-full p-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 border border-gray-600 focus:border-green-500 focus:outline-none transition-colors"
+                {...register("password", { 
+                  required: "Password is required",
+                  minLength: {
+                    value: 6,
+                    message: "Minimum 6 characters"
+                  },
+                  pattern: {
+                    value: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}$/,
+                    message: "Must include number, lowercase, and uppercase letters"
+                  }
+                })}
+              />
+            </label>
+            {errors.password && (
+              <p className="text-red-500 text-sm ml-8">{errors.password.message}</p>
+            )}
+          </div>
 
           {/* Sign Up Button */}
           <button 
             type="submit" 
-            className="btn bg-green-500 rounded-lg flex flex-row mx-auto"
+            className="btn bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 rounded-lg flex flex-row mx-auto mt-4 w-full py-3 text-white font-semibold transition-all duration-300 transform hover:scale-105"
           >
             Sign up
           </button>
 
           {/* Login Redirect */}
-          <span className='text-md font-semibold'> 
-            Have an account? 
-            <Link to="/login"
-              className='text-blue-600 ml-2 cursor-pointer underline'
-            >
-              Login
-            </Link>
-          </span>
+          <div className="text-center mt-4">
+            <span className='text-sm md:text-md font-semibold text-gray-300'> 
+              Have an account? 
+              <Link to="/login"
+                className='text-blue-400 ml-2 cursor-pointer underline hover:text-blue-300 transition-colors'
+              >
+                Login
+              </Link>
+            </span>
+          </div>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
   );
 }
 
