@@ -11,41 +11,37 @@ function Messages() {
     // useGetSocketMessage is used to listen for new messages from the socket
     const lastMsgRef = useRef();
     useEffect(()=>{
-
             lastMsgRef.current?.scrollIntoView({ behavior: "smooth" });
             console.log("scrolling to last message");
-
        console.log(lastMsgRef.current  , messages);
     }, [messages]);
   //  console.log(messages);
   return (
     <div className=' h-full w-full overflow-y-auto scrollbar-hide'>
-
-       {/* condition 3 */}
-          {
-            loading && !selectedConversation && (
-              < div className='flex  justify-center items-center h-full '>
-               Select a conversation to start chatting
+      {/* If no conversation is selected, show only the select message */}
+      { !selectedConversation && (
+        <div className='flex justify-center items-center h-full'>
+          Select a conversation to start chatting
+        </div>
+      )}
+      {/* If conversation is selected, show loading, messages, or empty state */}
+      { selectedConversation && (
+        <>
+          { loading ? (
+            <Loading/>
+          ) : (
+            messages.length > 0 ? (
+              messages.map((message, index) => (
+                <Message key={message._id} ref={index === messages.length - 1 ? lastMsgRef : null} message={message} />
+              ))
+            ) : (
+              <div className='flex justify-center items-center h-full'>
+                Say! Hi to start the conversation
               </div>
             )
-          }
-
-         {/* condition 1  */}
-         {
-          loading ? (<Loading/>  ): ( messages.length>0 && messages.map((message , index)=>{
-           return <Message key={message._id } ref= {index==messages.length -1 ? lastMsgRef : null}  message ={ message}/>
-          }))
-         }
-
-         {/* condtion 2 */}
-         {
-          !loading && messages.length ===0 && (
-            < div className='flex  justify-center items-center h-full '>
-              Say! Hi to start the conversation
-            </div>
-           )
-         }
-         
+          )}
+        </>
+      )}
     </div>
   )
 }
