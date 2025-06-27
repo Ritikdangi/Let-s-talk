@@ -48,7 +48,7 @@ function Signup() {
     <div className="min-h-screen w-full flex items-center justify-center bg-gray-900 p-4">
       <form 
         onSubmit={handleSubmit(onSubmit)} 
-        className="w-full max-w-md bg-slate-800 rounded-3xl p-6 md:p-8 shadow-2xl"
+        className="w-full max-w-xs sm:max-w-sm md:max-w-md mx-auto bg-slate-800 rounded-3xl p-4 sm:p-6 md:p-8 shadow-2xl"
       >
         {/* Let's Talk Logo */}
         <div className="mb-6">
