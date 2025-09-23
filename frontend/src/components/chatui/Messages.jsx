@@ -12,7 +12,7 @@ function Messages() {
     const lastMsgRef = useRef();
     useEffect(()=>{
             lastMsgRef.current?.scrollIntoView({ behavior: "smooth" });
-            console.log("scrolling to last message");
+            console.log(" scrolling to last message");
        console.log(lastMsgRef.current  , messages);
     }, [messages]);
   //  console.log(messages);

@@ -11,7 +11,7 @@ function AuthProvider  ({ children }) {
     const checkAuth = () => {
       try {
         const token = Cookies.get("token") || localStorage.getItem("ChatApp");
-        console.log( "in auth provider" ,token)
+        // console.log( "in auth provider" ,token)
         setAuthUser(token ? JSON.parse(token) : null);
         setLoading(false);
       } catch (error) {

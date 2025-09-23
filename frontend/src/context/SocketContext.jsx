@@ -17,7 +17,7 @@ export const SocketProvider = ({ children }) => {
     // Cleanup function
     const cleanup = () => {
       if (socketRef.current) {
-        console.log("🧹 Cleaning up socket connection");
+        console.log(" Cleaning up socket connection");
         socketRef.current.disconnect();
         socketRef.current = null;
         setSocket(null);
@@ -27,7 +27,7 @@ export const SocketProvider = ({ children }) => {
 
     // Initialize socket if we have a userId
     if (userId) {
-      console.log("🔄 Initializing socket connection for user:", userId);
+      console.log(" Initializing socket connection for user:", userId);
       
       // Clean up any existing connection first
       cleanup();
@@ -44,21 +44,21 @@ export const SocketProvider = ({ children }) => {
 
       // Socket event handlers
       newSocket.on("connect", () => {
-        console.log("✅ Socket connected successfully. Socket ID:", newSocket.id);
+        console.log(" Socket connected successfully. Socket ID:", newSocket.id);
         newSocket.emit("requestOnlineUsers");
       });
 
       newSocket.on("connect_error", (error) => {
-        console.error("❌ Socket connection error:", error.message);
+        console.error("Socket connection error:", error.message);
       });
 
       newSocket.on("getOnlineUsers", (users) => {
-        console.log("📢 Received online users:", users);
+        console.log(" Received online users:", users);
         setOnlineUsers(users);
       });
 
       newSocket.on("disconnect", (reason) => {
-        console.log("🔌 Socket disconnected:", reason);
+        console.log(" Socket disconnected:", reason);
         setOnlineUsers(prev => prev.filter(u => u !== userId));
       });
 
@@ -66,7 +66,7 @@ export const SocketProvider = ({ children }) => {
       socketRef.current = newSocket;
       setSocket(newSocket);
     } else {
-      console.log("⚠️ No user ID available, skipping socket initialization");
+      console.log(" No user ID available, skipping socket initialization");
       cleanup();
     }
 

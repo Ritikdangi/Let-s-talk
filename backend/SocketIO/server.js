@@ -23,12 +23,12 @@ const users = {};
 
 io.on('connection', (socket) => {
   const userId = socket.handshake.query.userId;
-  console.log('🔌 New socket connection:', socket.id, 'for user:', userId);
+  console.log(' New socket connection:', socket.id, 'for user:', userId);
 
   if (userId) {
     // Store user's socket ID
     users[userId] = socket.id;
-    console.log('👥 User connected. Current online users:', Object.keys(users));
+    console.log(' User connected. Current online users:', Object.keys(users));
     
     // Broadcast updated online users list
     io.emit('getOnlineUsers', Object.keys(users));
@@ -36,7 +36,7 @@ io.on('connection', (socket) => {
 
   // Handle online users request
   socket.on('requestOnlineUsers', () => {
-    console.log('📢 Sending online users list to:', socket.id);
+    console.log(' Sending online users list to:', socket.id);
     io.emit('getOnlineUsers', Object.keys(users));
   });
 

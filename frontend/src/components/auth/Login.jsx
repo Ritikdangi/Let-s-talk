@@ -19,7 +19,7 @@ function Login() {
     const [authUser, setAuthUser] = useAuth();
   const API_URL = import.meta.env.VITE_API_URL;
   const onSubmit = async (data) => {
-    console.log("Login data:", data);
+    // console.log("Login data:", data);
     //login API call here
       const userInfo= {
             email : data.email,
