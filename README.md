@@ -22,7 +22,7 @@ Clone and install:
 
 ```powershell
 git clone https://github.com/your-username/lets-talk.git
-cd "C:\Users\ritik\Desktop\Let-s-talk"
+cd Let-s-talk
 
 # Install backend deps
 cd backend
@@ -48,7 +48,7 @@ CLIENT_URL=http://localhost:5173
 ```
 VITE_API_URL=http://localhost:4000
 VITE_SOCKET_URL=http://localhost:4000
-JWT_KEY=fiergiergijeg
+JWT_KEY=
 ```
 
 Notes:
@@ -61,14 +61,14 @@ Notes:
 Open two PowerShell windows (or tabs). In the first (backend):
 
 ```powershell
-cd "C:\Users\ritik\Desktop\Let-s-talk\backend"
+cd Let-s-talk\backend
 npm run dev
 ```
 
 In the second (frontend):
 
 ```powershell
-cd "C:\Users\ritik\Desktop\Let-s-talk\frontend"
+cd Let-s-talk\frontend
 npm run dev
 ```
 
@@ -103,4 +103,4 @@ Backend API / Socket: http://localhost:4000
 - Deploy backend to a server or platform supporting Node.js (Heroku, Render, DigitalOcean, etc.).
 - Deploy frontend to Vercel, Netlify, or similar. Update `CLIENT_URL`, `VITE_API_URL`, and `VITE_SOCKET_URL` to production URLs.
 
-If you'd like, I can commit this README into the repo for you or add CI/startup scripts.
+
