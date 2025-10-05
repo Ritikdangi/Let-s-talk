@@ -3,7 +3,7 @@ import User from './User'
 import { useGetAllUsers } from '../../context/useGetAllUsers'
 import { useSearch } from '../../context/SearchContext'
 
-function Users() {
+function Users({ onUserSelect }) {
   const [users, setUsers] = useGetAllUsers();
   const { debouncedSearch } = useSearch();
 
@@ -13,18 +13,19 @@ function Users() {
   }
 
   const filteredUsers = useMemo(() => {
+    // Ensure users is an array before filtering
+    if (!Array.isArray(users)) return [];
+
     // Default case: Show all users when no search query
     if (!debouncedSearch.trim()) {
       return users;
     }
-    
-    // Search case: Filter users based on search
-    const filtered = users.filter(user => 
-      user.name.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
-      user.email.toLowerCase().includes(debouncedSearch.toLowerCase())
-    );
 
-    return filtered;
+    // Search case: Filter users based on search
+    return users.filter(user => 
+      (user?.name || '').toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+      (user?.email || '').toLowerCase().includes(debouncedSearch.toLowerCase())
+    );
   }, [users, debouncedSearch]);
 
   return (
@@ -33,7 +34,7 @@ function Users() {
         Messages 
       </h1>
       <div className='overflow-y-auto h-[calc(88vh-10vh)] scrollbar-hide'>
-        {debouncedSearch.trim() && filteredUsers.length === 0 ? (
+    {debouncedSearch.trim() && filteredUsers.length === 0 ? (
           // Show "Not found" only when there's a search query and no results
           <div className="p-4 text-center text-gray-400">
             No users found
@@ -41,7 +42,7 @@ function Users() {
         ) : (
           // Show users (either all users or filtered results)
           filteredUsers.map(user => (
-            <User key={user._id} userData={user} />
+            <User key={user._id} userData={user} onUserSelect={onUserSelect} />
           ))
         )}
       </div>

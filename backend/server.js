@@ -20,6 +20,8 @@ app.use(cors({
   exposedHeaders: ['set-cookie']
 }));
 
+console.log('Using CLIENT_URL for CORS:', process.env.CLIENT_URL);
+
 // Add this right after CORS middleware
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Credentials', 'true');

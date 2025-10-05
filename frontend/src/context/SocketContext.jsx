@@ -12,7 +12,9 @@ export const SocketProvider = ({ children }) => {
 
   useEffect(() => {
     const userId = authUser?.user?._id;
+    const SOCKET_URL = import.meta.env.VITE_SOCKET_URL;
     console.log("🔍 Auth state changed. User ID:", userId);
+    console.log("🌐 Using socket URL:", SOCKET_URL);
 
     // Cleanup function
     const cleanup = () => {
@@ -49,7 +51,8 @@ export const SocketProvider = ({ children }) => {
       });
 
       newSocket.on("connect_error", (error) => {
-        console.error("❌ Socket connection error:", error.message);
+        console.error("❌ Socket connection error:", error && error.message ? error.message : error);
+        // if the server returns HTML or a 4xx/5xx, it may show up here
       });
 
       newSocket.on("getOnlineUsers", (users) => {

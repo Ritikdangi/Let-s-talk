@@ -14,19 +14,22 @@ const Message = React.forwardRef(({ message }, ref) => {
 
   return (
     <div ref={ref} className="px-2 md:px-4 py-1">
-      <div className={`chat ${chatName}`}>
-        <div>
+      <div className={`chat ${chatName} w-full`}> 
+        {/* Inner wrapper ensures the bubble hugs left/right edges */}
+        <div className={itsMe ? 'w-full flex justify-end' : 'w-full flex justify-start'}>
           <div
-            className={`chat-bubble rounded-3xl text-white ${chatColor} break-words text-sm md:text-base max-w-[80%] md:max-w-[100%] p-3 flex flex-row items-end flex-wrap`}
-            style={{ wordBreak: 'break-word', whiteSpace: 'pre-line' }}
+            className={`chat-bubble rounded-3xl text-white ${chatColor} text-sm md:text-base max-w-[85%] md:max-w-[70%] p-3 inline-block`}
+            style={{ overflowWrap: 'break-word', whiteSpace: 'pre-wrap' }}
           >
-            <span className="break-words" style={{overflowWrap: 'anywhere'}}>{message.message}</span>
-            <span
-              className={`text-[11px] text-gray-300 ml-2 ${itsMe ? 'self-end' : 'self-end'}`}
-              style={{ opacity: 0.7, whiteSpace: 'nowrap' }}
-            >
-              {time}
-            </span>
+            <div className="flex items-end gap-2">
+              <span className="break-words" style={{ overflowWrap: 'break-word' }}>{message.message}</span>
+              <span
+                className="text-[11px] text-gray-300"
+                style={{ opacity: 0.7, whiteSpace: 'nowrap' }}
+              >
+                {time}
+              </span>
+            </div>
           </div>
         </div>
       </div>

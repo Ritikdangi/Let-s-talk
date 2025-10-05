@@ -26,6 +26,8 @@ function Logout() {
 
             // Clear local storage and cookies
             localStorage.removeItem("ChatApp");
+            // also remove lastConversation so next visitor doesn't inherit it
+            localStorage.removeItem('lastConversation');
             Cookies.remove("token");
             
             // Finally update auth state

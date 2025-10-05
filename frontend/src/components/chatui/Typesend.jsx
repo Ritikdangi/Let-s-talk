@@ -55,24 +55,38 @@ function Typesend() {
     }
   
   return (
-    <form onSubmit={handleSend} className="px-2 md:px-4">
-      <div className="h-[6vh] flex items-center justify-center gap-2 md:gap-3">
+    <form onSubmit={handleSend} className="px-3 md:px-6 py-3 bg-slate-900 border-t border-slate-800">
+      <div className="max-w-full mx-auto flex items-center gap-3">
         <div className="flex-1">
-          <input 
-            type="text" 
-            placeholder="Type your message" 
-            value={inputmessage} 
-            className="input border-0 w-full bg-slate-800 text-sm md:text-base" 
-            onChange={(e) => {
-              setInputMessage(e.target.value);
-              handleTyping();
-            }} 
-          />
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Type your message"
+              value={inputmessage}
+              className="w-full bg-slate-800 text-sm md:text-base text-white placeholder-slate-400 rounded-lg px-4 py-2 pr-14 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+              onChange={(e) => {
+                setInputMessage(e.target.value);
+                handleTyping();
+              }}
+              aria-label="Type a message"
+            />
+            <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
+              <button
+                type="submit"
+                disabled={!inputmessage.trim() || loading || !selectedConversation}
+                className="h-10 w-10 flex items-center justify-center text-blue-400 hover:text-blue-200 disabled:opacity-50 disabled:cursor-not-allowed rounded-full transition-colors"
+                aria-label="Send message"
+              >
+                {loading ? (
+                  <div className="w-4 h-4 border-2 border-blue-400 border-t-transparent rounded-full animate-spin"></div>
+                ) : (
+                  <IoMdSend className='text-base md:text-lg' />
+                )}
+              </button>
+            </div>
+          </div>
         </div>
-        <button className="p-2 hover:bg-slate-700 rounded-full transition-colors">
-          <IoMdSend className='text-2xl md:text-4xl'/>
-        </button>
-      </div> 
+      </div>
     </form>
   )
 }

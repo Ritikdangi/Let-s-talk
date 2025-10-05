@@ -12,8 +12,9 @@ function Dashboard() {
       <button 
         className='md:hidden fixed top-4 right-4 z-50 p-2 bg-slate-700 rounded-lg text-white hover:bg-slate-600 transition-colors'
         onClick={() => setShowSidebar(!showSidebar)}
+        aria-label="Open menu"
       >
-        <IoMenu size={24} />
+        <IoMenu size={22} />
       </button>
 
       {/* Sidebar - Hidden on mobile by default, shown when menu is clicked */}
@@ -22,7 +23,7 @@ function Dashboard() {
         transform transition-transform duration-300 ease-in-out
         ${showSidebar ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
       `}>
-        <Left />
+        <Left onUserSelect={() => setShowSidebar(false)} />
       </div>
 
       {/* Main Chat Area */}
