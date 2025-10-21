@@ -8,9 +8,12 @@ function Dashboard() {
      
   return (
     <div className='flex h-screen w-screen'>
-      {/* Mobile Menu Button */}
-      <button 
-        className='md:hidden fixed top-4 right-4 z-50 p-2 bg-slate-700 rounded-lg text-white hover:bg-slate-600 transition-colors'
+      {/* Mobile Menu Button
+          Slight upward offset added so the burger icon aligns vertically with
+          the user header avatar/text on smaller screens. Keeps visual balance.
+      */}
+      <button
+        className='md:hidden fixed top-3 right-4 z-50 p-2 bg-slate-700 rounded-lg text-white hover:bg-slate-600 transition-colors transform -translate-y-1'
         onClick={() => setShowSidebar(!showSidebar)}
         aria-label="Open menu"
       >

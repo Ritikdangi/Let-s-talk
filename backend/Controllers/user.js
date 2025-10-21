@@ -12,21 +12,25 @@ const Register = async(req,res) => {
        user = await User.create({ name,email,password});
        const userId = user._id;
     const token = jwt.sign({userId}, process.env.JWT_KEY);
+    // Set cookie secure flag only in production (requires HTTPS). Keep SameSite=None for cross-site.
     res.cookie("token", token, {
       httpOnly: true,
-      secure: true, // true for HTTPS in production
-      sameSite: 'none', // 'none' for cross-site cookies
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'none',
       path: '/',
       maxAge: 10 * 24 * 60 * 60 * 1000
     });
-     return  res.json({
-      user : {
-        email : user.email,
+
+    // Return token in response as a fallback for clients/browsers that block cookies.
+    return res.json({
+      user: {
+        email: user.email,
         name: user.name,
-        _id : user._id,
-      },       
-        message : "User registered successfully "
-        });
+        _id: user._id,
+      },
+      token,
+      message: "User registered successfully"
+    });
        }
       
       catch(e){
@@ -53,21 +57,25 @@ const Login = async(req,res)=>{
        }
       const userId = user._id;
       const token =  jwt.sign({userId}, process.env.JWT_KEY);
+      // Set cookie secure flag only in production (requires HTTPS). Keep SameSite=None for cross-site.
       res.cookie("token", token, {
         httpOnly: true,
-        secure: true, // true for HTTPS in production
-        sameSite: 'none', // 'none' for cross-site cookies
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'none',
         path: '/',
         maxAge: 10 * 24 * 60 * 60 * 1000
       });
+
+      // Return token in response body as a fallback for clients that cannot accept cookies.
       return res.json({
-          user : {
-            email : user.email,
-            name : user.name,
-            _id : user._id
-          },
-          message: " User login successfully"
-          });
+        user: {
+          email: user.email,
+          name: user.name,
+          _id: user._id
+        },
+        token,
+        message: "User login successfully"
+      });
     }
     catch(e){
       res.json({

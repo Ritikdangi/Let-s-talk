@@ -38,6 +38,10 @@ function Login() {
               // Store JWT in localStorage for fallback
               if (response.data.token) {
                 localStorage.setItem("jwt", response.data.token);
+                // immediately set axios Authorization header as a fallback
+                try {
+                  axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+                } catch (e) { console.warn('Could not set axios header immediately', e); }
                 setAuthUser({ ...response.data.user, jwt: response.data.token });
               } else {
                 localStorage.setItem("ChatApp", JSON.stringify(response.data));
