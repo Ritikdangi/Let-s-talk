@@ -4,15 +4,25 @@ import { AuthContext } from './Createcontext.jsx';
 
 
 function AuthProvider  ({ children }) {
+
   const [authUser, setAuthUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const checkAuth = () => {
       try {
-        const token = Cookies.get("token") || localStorage.getItem("ChatApp");
-        console.log( "in auth provider" ,token)
-        setAuthUser(token ? JSON.parse(token) : null);
+        // Prefer JWT from cookie if present
+        const jwtCookie = Cookies.get("token");
+        let userData = null;
+        if (jwtCookie){
+          // Only decode JWT if needed (for fallback, not for backend auth)
+          userData = { jwt: jwtCookie };
+        } else {
+          // Fallback to localStorage
+          const local = localStorage.getItem("ChatApp");
+          userData = local ? JSON.parse(local) : null;
+        }
+        setAuthUser(userData);
         setLoading(false);
       } catch (error) {
         console.error("Auth error:", error);

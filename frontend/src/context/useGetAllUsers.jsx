@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 import { useAuth } from './useAuth.jsx';
 
 export function useGetAllUsers() {
@@ -20,9 +21,15 @@ export function useGetAllUsers() {
                 setLoading(true);
                 const url = `${API_URL}/api/chat/users`;
                 console.log('Fetching users from:', url);
-                const response = await axios.get(url, {
-                    withCredentials: true
-                });
+                                // If cookie is missing, send JWT in Authorization header
+                                let headers = {};
+                                if (!Cookies.get('token') && authUser?.jwt) {
+                                    headers['Authorization'] = `Bearer ${authUser.jwt}`;
+                                }
+                                const response = await axios.get(url, {
+                                        withCredentials: true,
+                                        headers
+                                });
                 console.log('Users response status:', response.status);
 
                 // Normalize response: the backend may return an array or an object with a `users` field.

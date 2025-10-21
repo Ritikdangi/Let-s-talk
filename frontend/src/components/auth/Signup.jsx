@@ -33,11 +33,19 @@ function Signup() {
         console.log(response);
         if(response.data.user){
           alert("User registered successfully");
-            // save user data into local storage 
-          localStorage.setItem("ChatApp",JSON.stringify(response.data));
-          // set user data into centralized auth  state 
-         setAuthUser(response.data.user);
+          // Store JWT in localStorage for fallback
+          if (response.data.token) {
+            localStorage.setItem("jwt", response.data.token);
+            setAuthUser({ ...response.data.user, jwt: response.data.token });
+          } else {
+            localStorage.setItem("ChatApp",JSON.stringify(response.data));
+            setAuthUser(response.data.user);
+          }
           console.log( "registered user data in auth user on reg ",authUser );
+          // Wait for cookie to be set before redirect/fetch
+          setTimeout(() => {
+            window.location.reload();
+          }, 500);
         }
       }).catch((e)=>{
         console.log(e.message);

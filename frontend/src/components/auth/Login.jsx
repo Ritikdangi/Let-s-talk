@@ -35,11 +35,20 @@ function Login() {
             }
             if(response.data.user){
               alert("User logged in successfully");
-              localStorage.setItem("ChatApp", JSON.stringify(response.data));
-              setAuthUser(response.data);
+              // Store JWT in localStorage for fallback
+              if (response.data.token) {
+                localStorage.setItem("jwt", response.data.token);
+                setAuthUser({ ...response.data.user, jwt: response.data.token });
+              } else {
+                localStorage.setItem("ChatApp", JSON.stringify(response.data));
+                setAuthUser(response.data);
+              }
               window.dispatchEvent(new Event("storage"));
+              // Wait for cookie to be set before redirect/fetch
+              setTimeout(() => {
+                window.location.reload();
+              }, 500);
             }
-          
           }).catch((e)=>{
             console.log(e.message);
           });
