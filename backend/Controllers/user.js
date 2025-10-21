@@ -104,7 +104,6 @@ const AllUser = async(req, res )=>{
         }
          
 }
-export {Register,Login , Logout , AllUser};
 
 // Return currently authenticated user info
 const Me = async (req, res) => {

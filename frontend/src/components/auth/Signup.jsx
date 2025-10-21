@@ -5,7 +5,7 @@ import { AiOutlineMail } from "react-icons/ai";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { useAuth } from '../../context/useAuth.jsx';
 import axios from "axios" ;
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router-dom';
 import Logo from './Logo.jsx';
 
 function Signup() {
@@ -19,6 +19,7 @@ function Signup() {
   } = useForm();
   
   const API_URL = import.meta.env.VITE_API_URL;
+  const navigate = useNavigate();
 
   const onSubmit = async(data) => {
     console.log("Form submitted:", data);
@@ -34,21 +35,22 @@ function Signup() {
         if(response.data.user){
           alert("User registered successfully");
           // Store JWT in localStorage for fallback
-        if (response.data.token) {
+          if (response.data.token) {
             localStorage.setItem("jwt", response.data.token);
             try {
               axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
             } catch (e) { console.warn('Could not set axios header immediately', e); }
+            // Persist a minimal ChatApp object for UI fallback
+            localStorage.setItem("ChatApp", JSON.stringify(response.data.user));
             setAuthUser({ ...response.data.user, jwt: response.data.token });
           } else {
-            localStorage.setItem("ChatApp",JSON.stringify(response.data));
-            setAuthUser(response.data.user);
+            // backend didn't return token (cookie-only). Persist the user object
+            localStorage.setItem("ChatApp", JSON.stringify(response.data.user || response.data));
+            setAuthUser(response.data.user || response.data);
           }
-          console.log( "registered user data in auth user on reg ",authUser );
-          // Wait for cookie to be set before redirect/fetch
-          setTimeout(() => {
-            window.location.reload();
-          }, 500);
+          console.log("registered user data in auth user on reg", authUser);
+          // Navigate to app root. AuthProvider will verify session (cookie or token)
+          navigate('/');
         }
       }).catch((e)=>{
         console.log(e.message);

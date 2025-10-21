@@ -5,7 +5,7 @@ import { RiLockPasswordLine } from "react-icons/ri";
 import { AiOutlineMail } from "react-icons/ai";
 import axios from 'axios';
 import { useAuth } from '../../context/useAuth.jsx';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router-dom';
 import Logo from './Logo.jsx';
 
 function Login() {
@@ -18,6 +18,8 @@ function Login() {
   
     const [authUser, setAuthUser] = useAuth();
   const API_URL = import.meta.env.VITE_API_URL;
+  const navigate = useNavigate();
+
   const onSubmit = async (data) => {
     console.log("Login data:", data);
     //login API call here
@@ -42,16 +44,17 @@ function Login() {
                 try {
                   axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
                 } catch (e) { console.warn('Could not set axios header immediately', e); }
+                // persist minimal user object for UI fallback
+                localStorage.setItem("ChatApp", JSON.stringify(response.data.user));
                 setAuthUser({ ...response.data.user, jwt: response.data.token });
               } else {
-                localStorage.setItem("ChatApp", JSON.stringify(response.data));
-                setAuthUser(response.data);
+                // cookie-only auth: persist user object for UI fallback
+                localStorage.setItem("ChatApp", JSON.stringify(response.data.user || response.data));
+                setAuthUser(response.data.user || response.data);
               }
+              // notify other tabs/windows and navigate without a full reload
               window.dispatchEvent(new Event("storage"));
-              // Wait for cookie to be set before redirect/fetch
-              setTimeout(() => {
-                window.location.reload();
-              }, 500);
+              navigate('/');
             }
           }).catch((e)=>{
             console.log(e.message);
