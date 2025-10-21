@@ -12,15 +12,16 @@ function Messages() {
     const lastMsgRef = useRef();
     useEffect(()=>{
             lastMsgRef.current?.scrollIntoView({ behavior: "smooth" });
-            console.log("scrolling to last message");
-       console.log(lastMsgRef.current  , messages);
+            // console.log("scrolling to last message");
+       // console.log(lastMsgRef.current  , messages);
     }, [messages]);
   //  console.log(messages);
   return (
-    <div className=' h-full w-full overflow-y-auto scrollbar-hide'>
+    // Remove its own overflow; parent `Right` provides the scroll container.
+    <div className='w-full px-1 md:px-0 py-2'>
       {/* If no conversation is selected, show only the select message */}
       { !selectedConversation && (
-        <div className='flex justify-center items-center h-full'>
+        <div className='flex justify-center items-center h-full min-h-[50vh]'>
           Select a conversation to start chatting
         </div>
       )}
@@ -35,7 +36,7 @@ function Messages() {
                 <Message key={message._id} ref={index === messages.length - 1 ? lastMsgRef : null} message={message} />
               ))
             ) : (
-              <div className='flex justify-center items-center h-full'>
+              <div className='flex justify-center items-center h-full min-h-[40vh]'>
                 Say! Hi to start the conversation
               </div>
             )
