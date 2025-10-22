@@ -257,11 +257,18 @@ const Message = React.forwardRef(({ message }, ref) => {
         <div className={`w-full flex ${itsMe ? 'justify-end' : 'justify-start'}`}>
     <div ref={bubbleRef} className={`relative group ${bubbleBase} ${itsMe ? myBubble : otherBubble} msg-bubble ${showPicker ? 'ring-2 ring-indigo-400' : ''}`} style={{ whiteSpace: 'pre-wrap' }}
                onMouseDown={(e) => {
-                 // set early to avoid popover capturing the initiating click
-                 e.stopPropagation();
-                 try { console.debug('bubble mousedown for message', message._id); } catch {};
-                 setActiveAction(prev => prev && prev.id === String(message._id) && prev.type === 'reaction' ? null : { type: 'reaction', id: String(message._id) });
-               }}
+                  // If click originated from inside the edit input or from the reaction picker, ignore
+                  const inEditInput = e.target.closest && e.target.closest('.msg-edit-input');
+                  const inPicker = e.target.closest && e.target.closest('.msg-reaction-picker');
+                  if (inEditInput || inPicker) {
+                    // allow input focus and interactions
+                    return;
+                  }
+                  // set early to avoid popover capturing the initiating click
+                  e.stopPropagation();
+                  try { console.debug('bubble mousedown for message', message._id); } catch {};
+                  setActiveAction(prev => prev && prev.id === String(message._id) && prev.type === 'reaction' ? null : { type: 'reaction', id: String(message._id) });
+                }}
                onClick={(e) => { e.stopPropagation(); }}
       onTouchStart={() => startLongPress()}
       onTouchEnd={() => endLongPress()}>
@@ -277,7 +284,7 @@ const Message = React.forwardRef(({ message }, ref) => {
                     <input
                       value={editText}
                       onChange={(e) => setEditText(e.target.value)}
-                      className="w-full bg-transparent placeholder-gray-200 text-white outline-none"
+                      className="w-full bg-transparent placeholder-gray-200 text-white outline-none msg-edit-input"
                     />
                     <button className="px-2 py-1 bg-blue-600 rounded text-xs" onClick={() => { handleSaveEdit(); setActiveAction(null); }}>Save</button>
                     <button className="px-2 py-1 bg-gray-600 rounded text-xs" onClick={() => { setIsEditing(false); setEditText(message.message || ''); setActiveAction(null); }}>Cancel</button>
