@@ -18,7 +18,7 @@ function Messages() {
   //  console.log(messages);
   return (
     // Remove its own overflow; parent `Right` provides the scroll container.
-    <div className='w-full px-1 md:px-0 py-2'>
+  <div className='w-full px-1 md:px-0 py-2 pt-3 pb-6'>
       {/* If no conversation is selected, show only the select message */}
       { !selectedConversation && (
         <div className='flex justify-center items-center h-full min-h-[50vh]'>
@@ -29,14 +29,14 @@ function Messages() {
       { selectedConversation && (
         <>
           { loading ? (
-            <Loading/>
+            <Loading />
           ) : (
             messages.length > 0 ? (
               messages.map((message, index) => (
                 <Message key={message._id} ref={index === messages.length - 1 ? lastMsgRef : null} message={message} />
               ))
             ) : (
-              <div className='flex justify-center items-center h-full min-h-[40vh]'>
+              <div className='flex justify-center items-center w-full py-6'>
                 Say! Hi to start the conversation
               </div>
             )

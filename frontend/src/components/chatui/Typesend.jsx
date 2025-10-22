@@ -55,7 +55,7 @@ function Typesend() {
     }
   
   return (
-    <form onSubmit={handleSend} className="px-3 md:px-6 py-3 bg-slate-900 border-t border-slate-800">
+  <form onSubmit={handleSend} className="px-3 md:px-6 py-3 bg-slate-900 border-t border-slate-800 z-30">
       <div className="max-w-full mx-auto flex items-center gap-3">
         <div className="flex-1">
           <div className="relative">

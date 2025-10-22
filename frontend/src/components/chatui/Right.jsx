@@ -3,25 +3,25 @@ import Showuser from './Showuser';
 import Typesend from './Typesend';
 function Right() {
   return (
-    // Use full viewport height so header and input can be fixed in the flex layout
-    <div className='bg-slate-900 text-white w-full h-screen flex flex-col'>
-      {/* Header - keep as non-scrolling flex-none so it always stays visible */}
-      <div className="flex-none bg-slate-600 z-20">
+    // Use parent's height and allow proper flex overflow control
+    <div className='bg-slate-900 text-white w-full h-full flex flex-col min-h-0'>
+      {/* Header - keep sticky so it always stays visible */}
+      <div className="sticky top-0 z-20 flex-none bg-slate-600">
         <div className="min-h-[8vh]">
-          <Showuser/>
+          <Showuser />
         </div>
       </div>
 
-      {/* Messages Area - this should be the single scrollable region */}
-      <div className="flex-1 overflow-y-auto mx-2 md:mx-6 mt-2">
+      {/* Messages Area - single scrollable region */}
+      <div className="flex-1 min-h-0 overflow-y-auto mx-2 md:mx-6 mt-2 pb-24">
         <div className="w-full">
-          <Messages/>
+          <Messages />
         </div>
       </div>
 
-      {/* Input Area - fixed at bottom inside the flex column */}
-      <div className="flex-none">
-        <Typesend/>
+      {/* Input Area - sticky at bottom inside the flex column */}
+      <div className="sticky bottom-0 z-20 flex-none">
+        <Typesend />
       </div>
     </div>
   )

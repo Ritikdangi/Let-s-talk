@@ -34,6 +34,10 @@ const useConversation = create((set) => ({
       set({ messages });
     }
   },
+  // UI coordination: which message currently has an active action (reaction picker or edit)
+  // shape: null | { type: 'reaction'|'edit', id: '<messageId>' }
+  activeAction: null,
+  setActiveAction: (action) => set({ activeAction: action }),
 }))
 
 export default useConversation
