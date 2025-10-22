@@ -29,11 +29,11 @@ function Users({ onUserSelect }) {
   }, [users, debouncedSearch]);
 
   return (
-    <div className='px-5 py-2 text-white font-semibold'>
+  <div className='px-3 py-2 text-white font-semibold'>
       <h1 className='bg-slate-500 p-2 rounded-md'>
         Messages 
       </h1>
-      <div className='overflow-y-auto h-[calc(88vh-10vh)] scrollbar-hide'>
+      <div>
     {debouncedSearch.trim() && filteredUsers.length === 0 ? (
           // Show "Not found" only when there's a search query and no results
           <div className="p-4 text-center text-gray-400">

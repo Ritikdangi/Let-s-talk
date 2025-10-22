@@ -121,4 +121,35 @@ const Me = async (req, res) => {
   }
 };
 
-export {Register,Login , Logout , AllUser, Me};
+// Update authenticated user's profile (name, email, password)
+const UpdateProfile = async (req, res) => {
+  try {
+    const userId = req.user?.userId;
+    if (!userId) return res.status(401).json({ message: 'Not authenticated' });
+
+    const { name, email, password } = req.body || {};
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    // If email changed, ensure uniqueness
+    if (email && String(email).toLowerCase() !== String(user.email).toLowerCase()) {
+      const existing = await User.findOne({ email: String(email).toLowerCase() });
+      if (existing) return res.status(400).json({ message: 'Email already in use' });
+      user.email = String(email).toLowerCase();
+    }
+
+    if (name) user.name = name;
+    if (password) user.password = password; // NOTE: passwords are stored plain in this project; consider hashing
+
+    await user.save();
+
+    // Return updated user without password
+    const safeUser = { _id: user._id, name: user.name, email: user.email };
+    return res.json({ message: 'Profile updated', user: safeUser });
+  } catch (error) {
+    console.error('UpdateProfile error:', error);
+    return res.status(500).json({ message: 'Server error' });
+  }
+};
+
+export {Register,Login , Logout , AllUser, Me, UpdateProfile};

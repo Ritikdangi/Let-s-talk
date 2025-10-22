@@ -8,6 +8,7 @@ const Message = React.forwardRef(({ message }, ref) => {
   const [localReactions, setLocalReactions] = useState(message.reactions || []);
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(message.message || '');
+  const [saving, setSaving] = useState(false);
 
   // Determine current user id from ChatApp or jwt fallback
   let myId = null;
@@ -66,14 +67,29 @@ const Message = React.forwardRef(({ message }, ref) => {
   }, [message]);
 
   const { activeAction, setActiveAction, setMessage } = useConversation();
-
   // Reaction picker state and long-press handling (controlled by global activeAction)
-  const showPicker = activeAction?.type === 'reaction' && activeAction?.id === String(message._id);
   const longPressTimer = React.useRef(null);
   const bubbleRef = React.useRef(null);
   const popoverRef = React.useRef(null);
   const [pickerPos, setPickerPos] = useState(null);
   const [popperVisible, setPopperVisible] = useState(false);
+  const [flickerVisible, setFlickerVisible] = useState(false);
+  const [flickerPos, setFlickerPos] = useState(null);
+  const flickerTimer = React.useRef(null);
+  const showPicker = activeAction?.type === 'reaction' && activeAction?.id === String(message._id) && !flickerVisible;
+
+  // Close this flicker if another message's action becomes active
+  React.useEffect(() => {
+    if (!activeAction) return;
+    if (activeAction.type === 'reaction' && String(activeAction.id) !== String(message._id)) {
+      // another message's reaction UI opened -> hide this flicker
+      if (flickerTimer.current) {
+        clearTimeout(flickerTimer.current);
+        flickerTimer.current = null;
+      }
+      setFlickerVisible(false);
+    }
+  }, [activeAction]);
 
   const startLongPress = () => {
     longPressTimer.current = setTimeout(() => setActiveAction({ type: 'reaction', id: String(message._id) }), 500);
@@ -139,6 +155,23 @@ const Message = React.forwardRef(({ message }, ref) => {
       setPopperVisible(false);
     }
   }, [showPicker]);
+
+  // When picker opens, focus first emoji and close on Escape
+  React.useEffect(() => {
+    if (!showPicker) return;
+    const picker = popoverRef.current;
+    // focus first button inside picker for keyboard users
+    const firstBtn = picker && picker.querySelector && picker.querySelector('button');
+    if (firstBtn) {
+      try { firstBtn.focus(); } catch (e) {}
+    }
+
+    const onKey = (e) => {
+      if (e.key === 'Escape') setActiveAction(null);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [showPicker, setActiveAction]);
 
   // Close picker on outside click
   React.useEffect(() => {
@@ -215,19 +248,30 @@ const Message = React.forwardRef(({ message }, ref) => {
   const handleSaveEdit = async () => {
     if (!itsMe) return;
     try {
+      setSaving(true);
       const jwtLocal = localStorage.getItem('jwt');
-      if (jwtLocal) axios.defaults.headers.common['Authorization'] = `Bearer ${jwtLocal}`;
-      const res = await axios.put(`${API_URL}/api/message/edit/${message._id}`, { message: editText }, { withCredentials: true });
+      const headers = {};
+      if (jwtLocal) headers['Authorization'] = `Bearer ${jwtLocal}`;
+      try { console.debug('sending edit request', { url: `${API_URL}/api/message/edit/${message._id}`, body: { message: editText }, headers }); } catch (e) {}
+      const res = await axios.put(`${API_URL}/api/message/edit/${message._id}`, { message: editText }, { withCredentials: true, headers });
+      try { console.debug('edit response', res.status, res.data); } catch (e) {}
       if (res.status === 200) {
-        // update local display optimistically; backend will emit messageEdited to others
-        message.message = editText;
-        message.edited = true;
+        const updatedMsg = res.data.updated || res.data.updatedMessage || null;
+        // if server returned updated message, patch global store; else fallback to optimistic local update
+        if (updatedMsg) {
+          setMessage(prev => prev.map(m => (String(m._id) === String(updatedMsg._id) ? updatedMsg : m)));
+        } else {
+          // fallback optimistic update
+          setMessage(prev => prev.map(m => (String(m._id) === String(message._id) ? { ...m, message: editText, edited: true } : m)));
+        }
         setIsEditing(false);
         setActiveAction(null);
       }
     } catch (e) {
       console.warn('Edit failed', e);
-    }
+    } finally {
+      setSaving(false);
+      }
   };
 
   // If activeAction moves away from this message's edit, cancel edit and revert text
@@ -257,19 +301,34 @@ const Message = React.forwardRef(({ message }, ref) => {
         <div className={`w-full flex ${itsMe ? 'justify-end' : 'justify-start'}`}>
     <div ref={bubbleRef} className={`relative group ${bubbleBase} ${itsMe ? myBubble : otherBubble} msg-bubble ${showPicker ? 'ring-2 ring-indigo-400' : ''}`} style={{ whiteSpace: 'pre-wrap' }}
                onMouseDown={(e) => {
-                  // If click originated from inside the edit input or from the reaction picker, ignore
+                  // preserve long-press behavior and ignore interactions originating from nested controls
                   const inEditInput = e.target.closest && e.target.closest('.msg-edit-input');
                   const inPicker = e.target.closest && e.target.closest('.msg-reaction-picker');
-                  if (inEditInput || inPicker) {
-                    // allow input focus and interactions
-                    return;
-                  }
-                  // set early to avoid popover capturing the initiating click
-                  e.stopPropagation();
-                  try { console.debug('bubble mousedown for message', message._id); } catch {};
-                  setActiveAction(prev => prev && prev.id === String(message._id) && prev.type === 'reaction' ? null : { type: 'reaction', id: String(message._id) });
+                  if (inEditInput || inPicker) return;
+                  // do not toggle on mouse down; keep for long-press only
                 }}
-               onClick={(e) => { e.stopPropagation(); }}
+               onClick={(e) => {
+                 e.stopPropagation();
+                 try { console.debug('bubble click (show flicker) for message', message._id); } catch {};
+                 // don't show flicker while editing
+                 if (isEditing) return;
+                 // set global activeAction so other message flickers close immediately
+                 setActiveAction({ type: 'reaction', id: String(message._id) });
+                 const bubble = bubbleRef.current;
+                 if (!bubble) return;
+                 const rect = bubble.getBoundingClientRect();
+                 const popW = 220; // approx width of flicker
+                 const left = rect.left + rect.width / 2 - popW / 2;
+                 // place just above the bubble; if not enough space, place below
+                 let top = rect.top - 56;
+                 if (top < 8) top = rect.bottom + 8;
+                 // set fixed-position coords
+                 setFlickerPos({ left: Math.max(8, left), top: Math.max(8, top) });
+                 setFlickerVisible(true);
+                 // auto-hide after 2s
+                 if (flickerTimer.current) clearTimeout(flickerTimer.current);
+                 flickerTimer.current = setTimeout(() => { setFlickerVisible(false); flickerTimer.current = null; setActiveAction(null); }, 2000);
+               }}
       onTouchStart={() => startLongPress()}
       onTouchEnd={() => endLongPress()}>
             <div className="flex items-end justify-between gap-3">
@@ -286,8 +345,15 @@ const Message = React.forwardRef(({ message }, ref) => {
                       onChange={(e) => setEditText(e.target.value)}
                       className="w-full bg-transparent placeholder-gray-200 text-white outline-none msg-edit-input"
                     />
-                    <button className="px-2 py-1 bg-blue-600 rounded text-xs" onClick={() => { handleSaveEdit(); setActiveAction(null); }}>Save</button>
-                    <button className="px-2 py-1 bg-gray-600 rounded text-xs" onClick={() => { setIsEditing(false); setEditText(message.message || ''); setActiveAction(null); }}>Cancel</button>
+                    <button
+                      disabled={saving}
+                      className={`px-2 py-1 rounded text-xs msg-edit-action ${saving ? 'bg-gray-500 cursor-wait' : 'bg-blue-600'}`}
+                      onClick={(e) => { e.stopPropagation(); try { console.debug('Save button clicked for', message._id); } catch {} ; handleSaveEdit(); }}
+                    >{saving ? 'Saving...' : 'Save'}</button>
+                    <button
+                      className="px-2 py-1 bg-gray-600 rounded text-xs msg-edit-action"
+                      onClick={(e) => { e.stopPropagation(); try { console.debug('Cancel edit clicked for', message._id); } catch {} ; setIsEditing(false); setEditText(message.message || ''); setActiveAction(null); }}
+                    >Cancel</button>
                   </div>
                 )}
               </div>
@@ -304,23 +370,38 @@ const Message = React.forwardRef(({ message }, ref) => {
 
             {/* Reaction picker rendered inside bubble so bubble click/long-press opens it */}
               {/* Always render the picker but show it on hover or when explicitly active. Rendering it persistently avoids mount/unmount races that can steal clicks. */}
-              <div
-                className={`msg-reaction-picker absolute -top-12 left-1/2 transform -translate-x-1/2 flex gap-2 justify-center items-center p-1 rounded-full bg-slate-800/90 shadow-lg z-50 transition-all duration-150 ${showPicker ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'} group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto`}
-                role="dialog"
-                aria-label="Reaction picker"
-                onClick={(e) => e.stopPropagation()}
-              >
-                {['👍', '❤️', '😂', '😮', '😢'].map((emoji) => (
-                  <button
-                    key={emoji}
-                    onClick={(ev) => { ev.stopPropagation(); try { console.debug('reaction button clicked', emoji, message._id); } catch {} ; toggleReaction(emoji); setActiveAction(null); }}
-                    className="p-2 rounded-full transition-all duration-200 hover:scale-110 bg-slate-700/40"
-                    aria-label={`React ${emoji}`}
+              {!isEditing && (
+                <>
+                  <div
+                    className={`msg-reaction-picker absolute -top-12 left-1/2 transform -translate-x-1/2 flex gap-2 justify-center items-center p-1 rounded-full bg-slate-800/90 shadow-lg z-50 transition-all duration-150 ${showPicker ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'}`}
+                    role="dialog"
+                    aria-label="Reaction picker"
+                    onClick={(e) => e.stopPropagation()}
                   >
-                    <span className="text-lg leading-none">{emoji}</span>
-                  </button>
-                ))}
-              </div>
+                    {['👍', '❤️', '😂', '😮', '😢'].map((emoji) => (
+                                    <button
+                                      type="button"
+                        key={emoji}
+                        onClick={(ev) => { ev.stopPropagation(); try { console.debug('reaction button clicked', emoji, message._id); } catch {} ; toggleReaction(emoji); setActiveAction(null); }}
+                        className="p-2 rounded-full transition-all duration-200 hover:scale-110 bg-slate-700/40"
+                        aria-label={`React ${emoji}`}
+                      >
+                        <span className="text-lg leading-none">{emoji}</span>
+                      </button>
+                    ))}
+                  </div>
+                  {/* Flicker portal: small floating bar that appears briefly on click (desktop-like) */}
+                  {flickerVisible && flickerPos && !isEditing && typeof document !== 'undefined' && createPortal(
+                    <div style={{ position: 'fixed', left: flickerPos.left, top: flickerPos.top, zIndex: 9999 }}>
+                      <div className={`flex gap-2 p-1 rounded-full bg-slate-800/90 shadow-lg transition-all duration-120 opacity-100 scale-100`} onClick={(e)=>e.stopPropagation()}>
+                        {['👍', '❤️', '😂', '😮', '😢'].map((emoji) => (
+                          <button key={emoji} type="button" onClick={(e) => { e.stopPropagation(); toggleReaction(emoji); setFlickerVisible(false); setActiveAction(null); }} className="p-2 rounded-full bg-slate-700/40 hover:scale-110 transition-transform">{emoji}</button>
+                        ))}
+                      </div>
+                    </div>, document.body)
+                  }
+                </>
+              )}
           </div>
         </div>
 

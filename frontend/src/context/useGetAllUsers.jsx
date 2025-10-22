@@ -47,6 +47,23 @@ export function useGetAllUsers() {
                 }
 
                 setUsers(list);
+                // For each user, attempt to fetch the last message in the conversation with the authenticated user
+                try {
+                    const fetchLasts = await Promise.all(list.map(async (u) => {
+                        try {
+                            const meResp = await axios.get(`${API_URL}/api/message/get/${u._id}`, { withCredentials: true, headers });
+                            const msgs = Array.isArray(meResp.data) ? meResp.data : (meResp.data?.messages || []);
+                            const last = msgs && msgs.length ? msgs[msgs.length - 1].message : null;
+                            return { ...u, lastMessage: last };
+                        } catch (e) {
+                            return { ...u, lastMessage: null };
+                        }
+                    }));
+                    setUsers(fetchLasts);
+                } catch (e) {
+                    // if fetching last messages fails, keep the plain list
+                    console.debug('Failed to fetch last messages for users', e);
+                }
                 setError(null);
             } catch (err) {
                 console.error('Error fetching users:', err);

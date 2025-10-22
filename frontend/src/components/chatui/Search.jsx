@@ -10,7 +10,7 @@ function Search() {
   };
 
   return (
-    <div className='text-white px-3 md:px-6 py-3 md:py-4 min-h-[10vh]'>
+    <div className='text-white px-3 md:px-6 py-4 md:py-4 min-h-[10vh]'>
       <form onSubmit={handleSubmit}>
         <div className='flex items-center gap-2'>
           <input 

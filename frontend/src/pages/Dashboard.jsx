@@ -8,25 +8,21 @@ function Dashboard() {
      
   return (
     <div className='flex h-screen w-screen'>
-      {/* Mobile Menu Button
-          Slight upward offset added so the burger icon aligns vertically with
-          the user header avatar/text on smaller screens. Keeps visual balance.
-      */}
+      {/* Mobile Menu Button fixed in the app header (right side) */}
       <button
-        className='md:hidden fixed top-3 right-4 z-50 p-2 bg-slate-700 rounded-lg text-white hover:bg-slate-600 transition-colors transform -translate-y-1'
+        className='md:hidden fixed top-4 right-4 z-50 p-2 bg-slate-700 rounded-lg text-white hover:bg-slate-600 transition-colors'
         onClick={() => setShowSidebar(!showSidebar)}
         aria-label="Open menu"
       >
         <IoMenu size={22} />
       </button>
-
       {/* Sidebar - Hidden on mobile by default, shown when menu is clicked */}
       <div className={`
-        fixed md:static w-[280px] md:w-[30%] h-full z-40
+        fixed md:static w-[280px] max-w-[90vw] md:w-[30%] h-full z-40
         transform transition-transform duration-300 ease-in-out
         ${showSidebar ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
       `}>
-        <Left onUserSelect={() => setShowSidebar(false)} />
+  <Left onUserSelect={() => setShowSidebar(false)} />
       </div>
 
       {/* Main Chat Area */}
